@@ -6,8 +6,8 @@ import firebase from 'firebase'
 class Photo extends React.Component {
     constructor(props) {
         super(props);
-        this.toFind = ["Sewer", "Green Border", "Elevator", "Kitchen Door", "Stairs", "Bathroom"];
-        this.state = {found: 0, modalLoc: null, modalDoor: null};
+        const toFind = ["Sewer", "Green Border", "Elevator", "Kitchen Door", "Stairs", "Bathroom"];
+        this.state = {doors: toFind, modalLoc: null, modalDoor: null};
     }
 
     handleClick = (e) => {
@@ -22,9 +22,19 @@ class Photo extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const validate = firebase.functions().httpsCallable('Locations');
-        validate({door: "Sewer", x: this.state.modalLoc[0], y: this.state.modalLoc[1]})
-        .then(console.log);
-        this.setState({...this.state, modalLoc: null});
+        const selectedDoor = this.state.modalDoor;
+        const coords = [this.state.modalLoc[0], this.state.modalLoc[1]];
+        validate({door: selectedDoor, x: coords[0], y: coords[1]})
+        .then((result) => {
+            if(result.data) {
+                this.setState({...this.state, 
+                doors: [...this.state.doors].filter((d) => d!== selectedDoor),
+                modalLoc: null, modalDoor: null});
+            }
+            else {
+                this.setState({...this.state, modalLoc: null, modalDoor: null});
+            }
+        });
     }
 
     renderModal = () => {
@@ -35,8 +45,9 @@ class Photo extends React.Component {
             top: this.state.modalLoc[1],
         };
         return <div className={'modal'} style={myStyle}>
-            <select>
-                {this.toFind.map((door) => <option value={door}>{door}</option>)}
+            <select onChange={(e) => this.setState({...this.state, modalDoor: e.target.value})}>
+                <option value={""} selected disabled hidden>Select a door</option> 
+                {this.state.doors.map((door) => <option value={door}>{door}</option>)}
             </select>
             <button onClick={this.handleSubmit}>Submit</button>
         </div>
