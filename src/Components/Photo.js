@@ -1,12 +1,13 @@
 import React from 'react';
 import spiderman from '../images/spiderman.jpg'
 import './Photo.css'
+import firebase from 'firebase'
 
 class Photo extends React.Component {
     constructor(props) {
         super(props);
         this.toFind = ["Sewer", "Green Border", "Elevator", "Kitchen Door", "Stairs", "Bathroom"];
-        this.state = {found: 0, modalLoc: null};
+        this.state = {found: 0, modalLoc: null, modalDoor: null};
     }
 
     handleClick = (e) => {
@@ -18,7 +19,11 @@ class Photo extends React.Component {
         console.log(e.pageX, e.pageY);
     }
 
-    handleSubmit = () => {
+    handleSubmit = (e) => {
+        e.preventDefault();
+        const validate = firebase.functions().httpsCallable('Locations');
+        validate({door: "Sewer", x: this.state.modalLoc[0], y: this.state.modalLoc[1]})
+        .then(console.log);
         this.setState({...this.state, modalLoc: null});
     }
 
