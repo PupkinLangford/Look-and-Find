@@ -18,6 +18,10 @@ class Photo extends React.Component {
         console.log(e.pageX, e.pageY);
     }
 
+    handleSubmit = () => {
+        this.setState({...this.state, modalLoc: null});
+    }
+
     renderModal = () => {
         if(!this.state.modalLoc) return;
         const myStyle = {
@@ -29,7 +33,7 @@ class Photo extends React.Component {
             <select>
                 {this.toFind.map((door) => <option value={door}>{door}</option>)}
             </select>
-            <button>Submit</button>
+            <button onClick={this.handleSubmit}>Submit</button>
         </div>
     }
 
