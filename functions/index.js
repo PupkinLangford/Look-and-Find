@@ -12,6 +12,7 @@ exports.Locations = functions.https.onCall((data, context) => {
        "Stairs": [368, 483], 
        "Bathroom": [336, 61]
    }
+   if (!doors[data.door]) return;
    return (Math.abs(data.x - doors[data.door][0]) < 50 && Math.abs(data.y - doors[data.door][1]) < 50);
  });
 

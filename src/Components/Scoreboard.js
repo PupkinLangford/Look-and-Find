@@ -7,13 +7,14 @@ class Scoreboard extends React.Component {
     }
 
     render() {
-        const scores = this.props.scores.map((s) => {
-            return <div><p>{`${s.name}: ${s.score}`}</p></div>
+        const scores = this.props.scores.map((s, ind) => {
+            return <div><p>{`${ind + 1}. ${s.name}: ${s.score} seconds`}</p></div>
         });
         console.table(this.props.scores);
         return (
             <div>
-                <h2>{this.props.score}</h2>
+                <h2>{`Your Time: ${this.props.score} seconds`}</h2>
+                <h2>{'High Scores:'}</h2>
                 {scores}
             </div>
         )
