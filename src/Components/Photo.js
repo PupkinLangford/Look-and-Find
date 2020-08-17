@@ -1,13 +1,20 @@
 import React from 'react';
-import spiderman from '../images/spiderman.jpg'
-import './Photo.css'
-import firebase from 'firebase'
+import spiderman from '../images/spiderman.jpg';
+import './Photo.css';
+import firebase from 'firebase';
 
 class Photo extends React.Component {
     constructor(props) {
         super(props);
         const toFind = ["Sewer", "Green Border", "Elevator", "Kitchen Door", "Stairs", "Bathroom"];
-        this.state = {doors: toFind, modalLoc: null, modalDoor: null};
+        const getTime = firebase.functions().httpsCallable('Time');
+        getTime({}).then(result => this.serverStartTime = result.data);
+        this.localStart = Date.now();
+        this.state = {doors: toFind, modalLoc: null, modalDoor: null, time: Date.now() - this.localStart};
+    }
+
+    componentDidMount() {
+        setInterval(() => this.setState({...this.state, time: Date.now() - this.localStart}), 1000);
     }
 
     handleClick = (e) => {
@@ -30,6 +37,7 @@ class Photo extends React.Component {
                 this.setState({...this.state, 
                 doors: [...this.state.doors].filter((d) => d!== selectedDoor),
                 modalLoc: null, modalDoor: null});
+                if (this.state.doors.length === 0) this.props.gameOver(Date.now() - this.serverStartTime);
             }
             else {
                 this.setState({...this.state, modalLoc: null, modalDoor: null});
@@ -58,6 +66,7 @@ class Photo extends React.Component {
             <div className={'photoContainer'}>
                 <img className={'mainPhoto'} src={spiderman} alt='' onClick={this.handleClick}/>
                 {this.renderModal()}
+                <h2>{Math.round(this.state.time / 1000)}</h2>
             </div>
         )
     }
