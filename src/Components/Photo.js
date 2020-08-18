@@ -10,6 +10,7 @@ class Photo extends React.Component {
         const getTime = firebase.functions().httpsCallable('Time');
         getTime({}).then(result => this.serverStartTime = result.data);
         this.localStart = Date.now();
+        this.correct = [];
         this.state = {doors: toFind, modalLoc: null, modalDoor: null, time: Date.now() - this.localStart};
     }
 
@@ -34,6 +35,12 @@ class Photo extends React.Component {
         validate({door: selectedDoor, x: coords[0], y: coords[1]})
         .then((result) => {
             if(result.data) {
+                const myStyle = {
+                    display: 'block',
+                    left: this.state.modalLoc[0] -25,
+                    top: this.state.modalLoc[1] -25,
+                };
+                this.correct.push(<div className={'correct'} style={myStyle}></div>);
                 this.setState({...this.state, 
                 doors: [...this.state.doors].filter((d) => d!== selectedDoor),
                 modalLoc: null, modalDoor: null});
@@ -66,6 +73,7 @@ class Photo extends React.Component {
             <div className={'photoContainer'}>
                 <img className={'mainPhoto'} src={spiderman} alt='' onClick={this.handleClick}/>
                 {this.renderModal()}
+                <div>{this.correct}</div>
                 <h2>{Math.round(this.state.time / 1000)}</h2>
             </div>
         )
