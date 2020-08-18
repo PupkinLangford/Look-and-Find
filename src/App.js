@@ -25,12 +25,23 @@ class App extends React.Component{
 
   startGame = () => {this.setState({...this.state, pregame: false, time:0})}
   gameOver = (endTime) => {
-    this.setState({...this.state, postgame: true, time: endTime/1000});
+    this.setState({...this.state, time: endTime/1000});
     if(this.state.time < this.scores[this.scores.length - 1].score || this.scores.length < 10) {
       let username = prompt("Enter your name");
       if (!username) username = 'Anonymous';
       if (username.length > 20) username = username.substring(0, 20);
       firebase.firestore().collection('scores').add({name: username, score: this.state.time});
+      const query = firebase.firestore().collection('scores').orderBy('score').limit(10);
+      query.onSnapshot(snapshot => {
+        this.scores = [];
+        snapshot.forEach(entry => {
+          const data = entry.data();
+          this.scores.push({name: data.name, score: data.score});
+        });
+        this.setState({...this.state, postgame: true});
+      });
+    } else {
+      this.setState({...this.state, postgame: true});
     }
   }
   render() {
