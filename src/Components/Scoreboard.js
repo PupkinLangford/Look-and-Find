@@ -1,4 +1,5 @@
 import React from 'react';
+import './Scoreboard.css'
 
 class Scoreboard extends React.Component {
     constructor(props) {
@@ -12,7 +13,7 @@ class Scoreboard extends React.Component {
         });
         console.table(this.props.scores);
         return (
-            <div>
+            <div className={'Scoreboard'}>
                 <h2>{`Your Time: ${this.props.score} seconds`}</h2>
                 <h2>{'High Scores:'}</h2>
                 {scores}

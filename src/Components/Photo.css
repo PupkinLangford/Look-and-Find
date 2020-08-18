@@ -1,7 +1,11 @@
 .mainPhoto {
     width: 1000x;
     height: 499px;
-    align-self: center;
+    align-self: initial;
+    align-content: initial;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .modal {
@@ -25,4 +29,15 @@
     left: 0;
     top: 0;
     background-color: rgba(0, 0, 0, 0);
+  }
+
+  .photoContainer > h2 {
+      position: absolute;
+      top: 500px;
+      left: 500px;
+  }
+  
+  button {
+        height: 30px;
+        margin-top: 5px;
   }
