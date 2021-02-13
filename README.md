@@ -1,3 +1,8 @@
+# Look and Find
+
+A look and find game created as part of the Odin Project's JavaScript curriculum. The front end was created with React while Firebase was used as a back end. 
+To keep solutions hidden, player guesses are validated on Firebase, which also handles timing and the keeping of high-scores.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
